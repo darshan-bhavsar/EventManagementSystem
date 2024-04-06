@@ -1,2 +1,4 @@
-package com.darshan.eventmanagementsystem.config;public class DatabaseConfig {
+package com.darshan.eventmanagementsystem.config;
+
+public class DatabaseConfig {
 }
