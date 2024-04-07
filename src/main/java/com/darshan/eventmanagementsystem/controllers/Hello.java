@@ -54,6 +54,7 @@ public class Hello {
     public void createEvent() {
         // create event
         System.out.println("data is processing in  DB");
+        System.out.println("processed");
          eventReaderService.readCsvAndSaveInDb("https://drive.google.com/file/d/1sZXyOT_V1NcZj3dDQIKY9Ea_W7XdGum_/view?usp=drive_link");
     }
 }
