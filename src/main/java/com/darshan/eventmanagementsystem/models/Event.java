@@ -27,6 +27,7 @@ public class Event {
     private long id;
     @CsvBindByName(column = "event_name")
     private String eventName;
+    
 
     @CsvBindByName(column = "city_name  ")
     private String cityName;
