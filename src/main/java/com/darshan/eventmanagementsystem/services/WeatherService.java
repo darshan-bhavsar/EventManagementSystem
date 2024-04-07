@@ -20,6 +20,7 @@ public class WeatherService {
         if(weather_Url == null) {
             return "Weather not found";
         }
+        System.out.println("hello there");
         return weather_Url;
     }
 }
