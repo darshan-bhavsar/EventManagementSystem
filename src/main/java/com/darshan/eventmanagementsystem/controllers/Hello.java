@@ -10,6 +10,8 @@ import com.darshan.eventmanagementsystem.services.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.json.JSONObject;
+import org.json.JSONException;
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -43,14 +45,18 @@ public class Hello {
          List<ResponseDto> list = new ArrayList<>();
         for(Event e : event){
             ResponseDto responseDto = new ResponseDto();
+            String jsonStr = e.getWeather();
+            //Double distancedouble = e.getDistance_km();
+            JSONObject jsonObj = new JSONObject(jsonStr);
+            //JSONObject jsonObj1 = new JSONObject(distancedouble);
+            //System.out.println("weather is " + jsonObj.get("weather"));
             responseDto.setEventName(e.getEventName());
             responseDto.setCity_name(e.getCityName());
             responseDto.setDate(e.getDate());
-            responseDto.setWeather(e.getWeather());
+            responseDto.setWeather((String)jsonObj.get("weather"));
             //System.out.println("weathers is + " + e.getWeather());
-            responseDto.setDistance_km(2.5);
+            responseDto.setDistance_km(e.getDistance_km());
             list.add(responseDto);
-            JSONObject json = (JSONObject) JSONSerializer.toJSON(e.getWeather());
         }
 
        return list;

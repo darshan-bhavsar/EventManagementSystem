@@ -24,30 +24,15 @@ public class EventFinderService {
     private ResponseDto responseDto;
     private WeatherService weatherService;
     private Event event;
+    private DistanceCalculation distanceCalculation;
 
 
-    public EventFinderService(EventRepository eventRepository, WeatherService weatherService) {
+    public EventFinderService(EventRepository eventRepository, WeatherService weatherService, DistanceCalculation distanceCalculation) {
         this.eventRepository = eventRepository;
         this.weatherService = weatherService;
+        this.distanceCalculation = distanceCalculation;
     }
 
-    //List<Event> cityAndDate = new ArrayList<>();
-
-//    public List<Event> getCityAndDate(List<Event> events){
-//        for(Event event : events){
-//            String city = event.getCityName();
-//            LocalDate date = event.getDate();
-//            String weather = weatherService.getWeather(city, date);
-//            event.setWeather(weather);
-//        }
-//        return cityAndDate;
-//    }
-
-//    public String getWeatherService() {
-//        //for(Event list : cityAndDate){
-//           return weatherService.getWeather(, list.getDate());
-//
-//    }
 
     public List<Event> findEvent(Double latiude , Double longitude , LocalDate date) {
         List<Event> events = eventRepository.findAll();
@@ -61,9 +46,11 @@ public class EventFinderService {
         events.sort(Comparator.comparing(Event::getDate));
         for(Event t : events){
             String weather = weatherService.getWeather(t.getCityName(),t.getDate());
-            System.out.println("Weather data: " + weather);
+           // System.out.println("Weather data: " + weather);
             t.setWeather(weather);
-            System.out.println(t.getEventName());
+           // System.out.println(t.getEventName());
+            Double distance = distanceCalculation.getDistance(latiude, longitude, t.getLatitude(), t.getLongitude());
+            t.setDistance_km(distance);
         }
         return events;
     }
