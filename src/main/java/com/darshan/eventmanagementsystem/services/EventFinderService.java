@@ -23,6 +23,7 @@ public class EventFinderService {
     private EventRepository eventRepository;
     private ResponseDto responseDto;
     private WeatherService weatherService;
+    private Event event;
 
 
     public EventFinderService(EventRepository eventRepository, WeatherService weatherService) {
@@ -30,9 +31,23 @@ public class EventFinderService {
         this.weatherService = weatherService;
     }
 
-    public String getWeatherService() {
-        return weatherService.getWeather();
-    }
+    //List<Event> cityAndDate = new ArrayList<>();
+
+//    public List<Event> getCityAndDate(List<Event> events){
+//        for(Event event : events){
+//            String city = event.getCityName();
+//            LocalDate date = event.getDate();
+//            String weather = weatherService.getWeather(city, date);
+//            event.setWeather(weather);
+//        }
+//        return cityAndDate;
+//    }
+
+//    public String getWeatherService() {
+//        //for(Event list : cityAndDate){
+//           return weatherService.getWeather(, list.getDate());
+//
+//    }
 
     public List<Event> findEvent(Double latiude , Double longitude , LocalDate date) {
         List<Event> events = eventRepository.findAll();
@@ -44,6 +59,12 @@ public class EventFinderService {
         System.out.println("Events after filtering by date: " + events.size());
 
         events.sort(Comparator.comparing(Event::getDate));
+        for(Event t : events){
+            String weather = weatherService.getWeather(t.getCityName(),t.getDate());
+            System.out.println("Weather data: " + weather);
+            t.setWeather(weather);
+            System.out.println(t.getEventName());
+        }
         return events;
     }
 }

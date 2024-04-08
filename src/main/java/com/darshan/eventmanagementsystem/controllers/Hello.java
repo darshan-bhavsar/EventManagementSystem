@@ -6,8 +6,10 @@ import com.darshan.eventmanagementsystem.dtos.ResponseDto;
 import com.darshan.eventmanagementsystem.models.Event;
 import com.darshan.eventmanagementsystem.services.EventFinderService;
 import com.darshan.eventmanagementsystem.services.EventReaderService;
+import com.darshan.eventmanagementsystem.services.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,14 +23,15 @@ public class Hello {
     private EventFinderService eventFinderService;
 
     private ResponseDto responseDto;
-    //private Event event;
+    private WeatherService weatherService;
 
 
-    public Hello(EventReaderService eventReaderService, EventFinderService eventFinderService){
+    public Hello(EventReaderService eventReaderService, EventFinderService eventFinderService,WeatherService weatherService){
         this.eventReaderService = eventReaderService;
         this.eventFinderService = eventFinderService;
-
+        this.weatherService = weatherService;
     }
+
     @GetMapping("/find") // GET /events/find
     public List<ResponseDto> eventFinder(@RequestParam Double latitude, @RequestParam Double longitude, @RequestParam LocalDate date){
         List<Event> event = eventFinderService.findEvent(latitude,longitude,date);
@@ -37,16 +40,19 @@ public class Hello {
         }else {
             System.out.println("Event is found successfully");
         }
-         ResponseDto responseDto = new ResponseDto();
          List<ResponseDto> list = new ArrayList<>();
         for(Event e : event){
+            ResponseDto responseDto = new ResponseDto();
             responseDto.setEventName(e.getEventName());
             responseDto.setCity_name(e.getCityName());
             responseDto.setDate(e.getDate());
-            responseDto.setWeather(eventFinderService.getWeatherService());
+            responseDto.setWeather(e.getWeather());
+            //System.out.println("weathers is + " + e.getWeather());
             responseDto.setDistance_km(2.5);
             list.add(responseDto);
+            JSONObject json = (JSONObject) JSONSerializer.toJSON(e.getWeather());
         }
+
        return list;
     }
 
