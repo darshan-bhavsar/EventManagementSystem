@@ -44,5 +44,7 @@ public class Event {
     @CsvBindByName(column = "longitude")
     private Double longitude;
 
+    private String weather;
+
     // getters and setters
 }
