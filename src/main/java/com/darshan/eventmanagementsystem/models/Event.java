@@ -46,5 +46,7 @@ public class Event {
 
     private String weather;
 
+    private double distance_km;
+
     // getters and setters
 }
