@@ -7,6 +7,10 @@ import com.darshan.eventmanagementsystem.models.Event;
 import com.darshan.eventmanagementsystem.repository.EventRepository;
 import lombok.Getter;
 import lombok.Setter;
+import org.json.JSONObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -34,7 +38,7 @@ public class EventFinderService {
     }
 
 
-    public List<Event> findEvent(Double latiude , Double longitude , LocalDate date) {
+    public Page<Event> findEvent(Double latiude , Double longitude , LocalDate date, Pageable pageable) {
         List<Event> events = eventRepository.findAll();
         System.out.println("Total events in the database: " + events.size());
         LocalDate dateAfter14Days = date.plusDays(14);
@@ -46,12 +50,18 @@ public class EventFinderService {
         events.sort(Comparator.comparing(Event::getDate));
         for(Event t : events){
             String weather = weatherService.getWeather(t.getCityName(),t.getDate());
+            String jsonStr = weather;
+            JSONObject jsonObj = new JSONObject(jsonStr);
            // System.out.println("Weather data: " + weather);
-            t.setWeather(weather);
+            t.setWeather((String)jsonObj.get("weather"));
            // System.out.println(t.getEventName());
             Double distance = distanceCalculation.getDistance(latiude, longitude, t.getLatitude(), t.getLongitude());
             t.setDistance_km(distance);
         }
-        return events;
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), events.size());
+        List<Event> pagedEvents = events.subList(start, end);
+        return new PageImpl<>(pagedEvents, pageable, events.size());
+       // return events;
     }
 }

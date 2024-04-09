@@ -10,10 +10,9 @@ import org.springframework.web.client.RestTemplate;
 public class DistanceCalculation
 {
     private RestTemplate restTemplate;
-    private Event event;
+
     public Double getDistance(Double latitude1,Double longitude1,Double latitude2,Double longitude2){
         RestTemplate restTemplate = new RestTemplate();
-        Event e = new Event();
         String url = "https://gg-backend-assignment.azurewebsites.net/api/Distance?code=IAKvV2EvJa6Z6dEIUqqd7yGAu7IZ8gaH-a0QO6btjRc1AzFu8Y3IcQ==&latitude1=" + latitude1 + "&longitude1=" + longitude1 + "&latitude2=" + latitude2 + "&longitude2=" + longitude2;
 
         DistanceResponse response = restTemplate.getForObject(url, DistanceResponse.class);

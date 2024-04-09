@@ -1,6 +1,7 @@
 package com.darshan.eventmanagementsystem.services;
 
 
+import com.darshan.eventmanagementsystem.dtos.ResponseDto;
 import com.darshan.eventmanagementsystem.models.Event;
 import com.darshan.eventmanagementsystem.repository.EventRepository;
 import com.opencsv.bean.CsvToBean;
@@ -19,6 +20,8 @@ public class EventReaderService {
     @Autowired
     private EventRepository eventRepository;
 
+    private ResponseDto responseDto;
+
     public void readCsvAndSaveInDb(String csvFilePath) {
         try (Reader reader = Files.newBufferedReader(Paths.get("C:\\Users\\darsh\\Desktop\\MyProject\\EventManagementSystem\\Backend_assignment_gg_dataset - dataset.csv"))) {
 
@@ -30,6 +33,7 @@ public class EventReaderService {
             List<Event> events = csvToBean.parse();
 
             eventRepository.saveAll(events);
+
 
         } catch (Exception ex) {
             // handle exception
